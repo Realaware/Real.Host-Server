@@ -1,0 +1,36 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  username String @unique
+  password String
+  uuid String @default(uuid())
+  userid Int @id @default(autoincrement())
+  images Image[]
+  roles Role[]
+}
+
+model Image {
+  image String
+  createdAt DateTime @default(now())
+  uuid String @default(cuid())
+  imageid Int @id @default(autoincrement())
+  user User @relation(fields: [userid], references:[userid])
+  userid Int
+}
+
+model Role {
+  name String @unique
+  roleid Int @id @default(autoincrement())
+  isAdmin Boolean @default(false)
+  users User[]
+}
